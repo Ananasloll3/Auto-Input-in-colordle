@@ -16,7 +16,26 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 url = "https://colourdle.co.uk/"
 driver.get(url)
 
-    
+
+def getColor(background_color : str):
+    background_color = background_color[5:15]
+    backgound_color = background_color.replace(" ", "")
+    backgound_color = background_color.replace(")", "")
+    backgound_color = background_color.replace("(", "")
+
+    backgound = background_color.split(",")
+    finalBack = "";
+
+    for i in range(len(backgound)):
+        backgound[i] = backgound[i].replace(" ", "")
+        
+        if len(backgound[i]) == 1:
+            backgound[i] = "00" + backgound[i]
+        elif len(backgound[i]) == 2:
+            backgound[i] = "0" + backgound[i]
+        finalBack += backgound[i]
+        
+    return finalBack
 
 
 
@@ -25,19 +44,17 @@ def auto_input(location : dict, background : str):
     
     os.system("start " + url)
     time.sleep(4)
-
-    background = background[5:18]
-    background = background.replace(" ", "")
-    background = background.replace(",", "")
-    print(background)
+    
+    finalBack = getColor(background)
+    print("Final background : " + finalBack)
 
     pyautogui.click(location["x"] + 100, location["y"] + 100)
     time.sleep(1)
     
-    for i in range(len(background)):
-        pyautogui.write(background[i])
+    for i in range(len(finalBack)):
+        pyautogui.write(finalBack[i])
         time.sleep(0.3)
-        print("Writed : " + background[i])
+        print("Writed : " + finalBack[i])
 
     time.sleep(0.5)
     pyautogui.press("enter")
